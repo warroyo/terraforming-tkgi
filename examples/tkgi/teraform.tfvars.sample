@@ -1,0 +1,4 @@
+tkgi_api_url = "pks.api.test.com"
+tkgi_password = "test"
+tkgi_user = "test"
+tkgi_external_hostname = "cluster.example.com"
