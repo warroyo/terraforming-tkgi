@@ -1,0 +1,5 @@
+tkgi_cp_vip_ip = "10.213.204.50"
+tkgi_cp_ips = ["10.213.204.51","10.213.204.53","10.213.204.52"]
+ns_user = "nsroot"
+ns_password = "nsroot"
+ns_url = "https://10.213.204.12/"

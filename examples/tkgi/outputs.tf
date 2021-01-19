@@ -1,4 +1,4 @@
 
-output "tkgi_master_ips" {
-  value = module.tkgi_cluster.tkgi_master_ips
+output "tkgi_cp_ips" {
+  value = module.tkgi_cluster.tkgi_cp_ips
 }
