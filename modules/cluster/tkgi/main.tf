@@ -1,4 +1,6 @@
 
+#this is used to get around the issue with destroy provisioners not having access to 
+# vars. this sets up a file that can be sources in all the below scripts.
 resource "local_file" "environment_sh" {
     sensitive_content = <<EOF
 export TKGI_API_URL="${var.tkgi_api_url}"
@@ -14,6 +16,7 @@ EOF
     filename = "${path.module}/bin/environment.sh"
 }
 
+#we can login in it's own resource since this  cerates a local dotfile with the login info
 resource "null_resource" "tkgi_login" {
   triggers = {
     always_run = timestamp()
@@ -27,6 +30,9 @@ resource "null_resource" "tkgi_login" {
   ]
 }
 
+
+#the below two resources are split due to how null_resource works. in order to allow for 
+#updates without a destroy first we need to separate the destroy into it's own rersource.
 resource "null_resource" "tkgi_cluster" {
   triggers = {
         tags = var.tkgi_tags
@@ -54,6 +60,8 @@ resource "null_resource" "tkgi_cluster_destroy" {
   ]
 }
 
+
+#this creates a json file from the cluster info to be used in an output
 resource "null_resource" "tkgi_cluster_info" {
   triggers = {
     always_run = timestamp()
@@ -75,6 +83,7 @@ resource "null_resource" "tkgi_cluster_info" {
   ]
 }
 
+#create data to be used in the outputs from the previosuly created file
 data "local_file" "tkgi_cluster_data" {
     filename = "${path.module}/bin/cluster.json"
     depends_on = [
