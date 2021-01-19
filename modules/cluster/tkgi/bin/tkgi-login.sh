@@ -10,4 +10,4 @@ SKIP_SSL="-k"
 fi
 
 #login to tkgi
-tkgi login -a ${TKGI_API_URL} -u ${TKGI_USER} ${SKIP_SSL}
+tkgi login -a ${TKGI_API_URL} -u ${TKGI_USER} -p ${TKGI_PASSWORD} ${SKIP_SSL}

@@ -7,7 +7,7 @@ module "tkgi_cluster" {
     tkgi_user = var.tkgi_user
     tkgi_cluster_name = "example"
     tkgi_plan = "small"
-    tkgi_worker_count = 3
+    tkgi_worker_count = var.tkgi_worker_count
     tkgi_external_hostname = var.tkgi_external_hostname
     tkgi_tags = "test:testvalue,hello:example"
 }
