@@ -24,6 +24,7 @@ variable "tkgi_skip_ssl_validation" {
 variable "tkgi_password" {
   description = "password"
   default = ""
+  sensitive =  true
 }
 variable "tkgi_user" {
   description = "username"

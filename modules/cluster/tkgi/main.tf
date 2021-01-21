@@ -1,36 +1,4 @@
 
-#this is used to get around the issue with destroy provisioners not having access to 
-# vars. this sets up a file that can be sources in all the below scripts.
-resource "local_file" "environment_sh" {
-    sensitive_content = <<EOF
-export TKGI_API_URL="${var.tkgi_api_url}"
-export TKGI_SKIP_SSL_VALIDATION="${var.tkgi_skip_ssl_validation}"
-export TKGI_PASSWORD="${var.tkgi_password}"
-export TKGI_USER="${var.tkgi_user}"
-export TKGI_CLUSTER_NAME="${var.tkgi_cluster_name}"
-export TKGI_PLAN="${var.tkgi_plan}"
-export TKGI_WORKER_COUNT="${var.tkgi_worker_count}"
-export TKGI_EXTERNAL_HOSTNAME="${var.tkgi_external_hostname}"
-export TKGI_TAGS="${var.tkgi_tags}" 
-EOF
-    filename = "${path.module}/bin/environment.sh"
-}
-
-#we can login in it's own resource since this  cerates a local dotfile with the login info
-resource "null_resource" "tkgi_login" {
-  triggers = {
-    always_run = timestamp()
-  }
-  provisioner "local-exec" {
-    command = "source bin/environment.sh && bin/tkgi-login.sh"
-    working_dir = path.module
-  }
-  depends_on = [
-    local_file.environment_sh
-  ]
-}
-
-
 #the below two resources are split due to how null_resource works. in order to allow for 
 #updates without a destroy first we need to separate the destroy into it's own rersource.
 resource "null_resource" "tkgi_cluster" {
@@ -39,24 +7,45 @@ resource "null_resource" "tkgi_cluster" {
         workers = var.tkgi_worker_count
   }
   provisioner "local-exec" {
-    command = "source bin/environment.sh && bin/tkgi-apply.sh"
+    environment = {
+      TKGI_API_URL =  var.tkgi_api_url 
+      TKGI_SKIP_SSL_VALIDATION = var.tkgi_skip_ssl_validation
+      TKGI_PASSWORD = var.tkgi_password
+      TKGI_USER = var.tkgi_user
+      TKGI_CLUSTER_NAME = var.tkgi_cluster_name
+      TKGI_PLAN = var.tkgi_plan
+      TKGI_WORKER_COUNT = var.tkgi_worker_count
+      TKGI_EXTERNAL_HOSTNAME = var.tkgi_external_hostname
+      TKGI_TAGS = var.tkgi_tags
+    }
+    command = "bin/tkgi-login.sh && bin/tkgi-apply.sh"
     working_dir = path.module
   }
   depends_on = [
-    null_resource.tkgi_login,
-    local_file.environment_sh
   ]
 }
 
 resource "null_resource" "tkgi_cluster_destroy" {
+  triggers = {
+      tkgi_api_url =  var.tkgi_api_url 
+      tkgi_skip_ssl_validation = var.tkgi_skip_ssl_validation
+      tkgi_password = var.tkgi_password
+      tkgi_user = var.tkgi_user
+      tkgi_cluster_name = var.tkgi_cluster_name
+  }
   provisioner "local-exec" {
+     environment = {
+      TKGI_API_URL =  self.triggers.tkgi_api_url 
+      TKGI_SKIP_SSL_VALIDATION =  self.triggers.tkgi_skip_ssl_validation
+      TKGI_PASSWORD =  self.triggers.tkgi_password
+      TKGI_USER =  self.triggers.tkgi_user
+      TKGI_CLUSTER_NAME =  self.triggers.tkgi_cluster_name
+    }
     when = destroy
-    command = "source bin/environment.sh && bin/tkgi-delete.sh"
+    command = "bin/tkgi-login.sh && bin/tkgi-delete.sh"
     working_dir = path.module
   }
   depends_on = [
-    null_resource.tkgi_login,
-    local_file.environment_sh
   ]
 }
 
@@ -67,7 +56,14 @@ resource "null_resource" "tkgi_cluster_info" {
     always_run = timestamp()
   }
   provisioner "local-exec" {
-    command = "source bin/environment.sh && bin/tkgi-get.sh"
+     environment = {
+      TKGI_API_URL =  var.tkgi_api_url 
+      TKGI_SKIP_SSL_VALIDATION = var.tkgi_skip_ssl_validation
+      TKGI_PASSWORD = var.tkgi_password
+      TKGI_USER = var.tkgi_user
+      TKGI_CLUSTER_NAME = var.tkgi_cluster_name
+    }
+    command = "bin/tkgi-login.sh && bin/tkgi-get.sh"
     working_dir = path.module
   }
   provisioner "local-exec" {
@@ -77,9 +73,7 @@ resource "null_resource" "tkgi_cluster_info" {
   }
 
   depends_on = [
-    null_resource.tkgi_login,
     null_resource.tkgi_cluster,
-    local_file.environment_sh
   ]
 }
 
