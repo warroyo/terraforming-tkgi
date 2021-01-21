@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    citrixadc = {
-      source = "terraform.example.com/citrix/citrixadc"
-    }
-  }
-}
-
 provider "citrixadc" {
     insecure_skip_verify = var.ns_insecure_skip_verify
     username = var.ns_user
