@@ -1,0 +1,7 @@
+infoblox_cidr = "10.213.204.0/24"
+infoblox_dns_zone = "pks.test"
+infoblox_password = "testing"
+infoblox_server = "10.213.204.15"
+infoblox_tenant_id = "test"
+infoblox_user = "admin"
+infoblox_vmname = "test-cluster"
