@@ -1,0 +1,5 @@
+  citrix_ns_ip = "10.213.204.12"
+  citrix_ns_password =  "nsroot"
+  citrix_ns_port = "443"
+  citrix_ns_user = "nsroot"
+  citrix_vip_range = ["\"10.213.204.50-10.213.204.56\""]

@@ -32,3 +32,4 @@ override.tf.json
 pivnet_token.txt
 .history
 *.terraform.lock.hcl
+.DS_Store

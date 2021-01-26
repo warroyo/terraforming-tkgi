@@ -1,0 +1,9 @@
+license:
+  accept: "yes"
+adcCredentialSecret: ${citrix_ns_secret}
+nsIP: ${citrix_ns_ip}
+nsProtocol: ${citrix_ns_proto}
+nsPort: ${citrix_ns_port}
+ipam: True
+crds:
+  install: True
