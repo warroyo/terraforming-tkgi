@@ -1,20 +1,18 @@
 
+
 provider "infoblox"{
   username = var.infoblox_user
   password = var.infoblox_password
-  server = var.infoblox_server
+  host = var.infoblox_server
+  sslverify = false
 }
 
-resource "infoblox_ip_allocation" "get_ip"{
-  vm_name = var.infoblox_vmname
-  cidr = var.infoblox_cidr
-  tenant_id = var.infoblox_tenant_id
-}
 
-resource "infoblox_a_record" "add_dns"{
-  ip_addr = infoblox_ip_allocation.get_ip.ip_addr
-  vm_name = var.infoblox_vmname
-  zone= var.infoblox_dns_zone
-  tenant_id = var.infoblox_tenant_id
-  cidr = var.infoblox_cidr
+resource "infoblox_record_host" "host" {
+  name              = "${var.infoblox_vmname}.${var.infoblox_dns_zone}"
+  configure_for_dns = true
+
+  ipv4addr {
+    function = "func:nextavailableip:${var.infoblox_range}"
+  }
 }

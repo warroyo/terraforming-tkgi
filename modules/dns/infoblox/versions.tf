@@ -1,8 +1,8 @@
 terraform {
     required_providers {
         infoblox = {
-            source = "terraform-providers/infoblox"
-            version = ">=1.0"
+            source = "registry.terraform.io/jgrancell/infoblox"
+            version = ">=2.0.1"
         }
     }
 }

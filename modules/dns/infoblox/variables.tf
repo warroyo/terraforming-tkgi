@@ -1,5 +1,5 @@
-variable "infoblox_cidr" {
-  description = "cidr to use when allocating ip"
+variable "infoblox_range" {
+  description = "cidr or ip range to lookup next avail ip"
 }
 
 variable "infoblox_dns_zone" {
@@ -14,9 +14,6 @@ variable "infoblox_server" {
   description = "hostname or ip of infoblox"
 }
 
-variable "infoblox_tenant_id" {
-  description = "tenant id"
-}
 
 variable "infoblox_user" {
   description = "user to login with"

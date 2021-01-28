@@ -1,9 +1,9 @@
 
 output "ip" {
-  value = infoblox_a_record.add_dns.ip_addr
+  value = infoblox_record_host.host.ipv4addr[0].address
 }
 
 
 output "hostname" {
-  value = "${infoblox_a_record.add_dns.vm_name}.${infoblox_a_record.add_dns.zone}"
+  value = infoblox_record_host.host.name
 }
