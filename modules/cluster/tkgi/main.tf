@@ -19,7 +19,7 @@ resource "null_resource" "tkgi_cluster" {
       TKGI_TAGS = var.tkgi_tags
     }
     command = "bin/tkgi-login.sh && bin/tkgi-apply.sh"
-    working_dir = path.module
+    working_dir = abspath(path.module)
   }
   depends_on = [
   ]
@@ -43,7 +43,7 @@ resource "null_resource" "tkgi_cluster_destroy" {
     }
     when = destroy
     command = "bin/tkgi-login.sh && bin/tkgi-delete.sh"
-    working_dir = path.module
+    working_dir = abspath(path.module)
   }
   depends_on = [
   ]
@@ -64,12 +64,12 @@ resource "null_resource" "tkgi_cluster_info" {
       TKGI_CLUSTER_NAME = var.tkgi_cluster_name
     }
     command = "bin/tkgi-login.sh && bin/tkgi-get.sh"
-    working_dir = path.module
+    working_dir = abspath(path.module)
   }
   provisioner "local-exec" {
     when = destroy
     command = "rm bin/cluster.json"
-    working_dir = path.module
+    working_dir = abspath(path.module)
   }
 
   depends_on = [
@@ -79,7 +79,7 @@ resource "null_resource" "tkgi_cluster_info" {
 
 #create data to be used in the outputs from the previosuly created file
 data "local_file" "tkgi_cluster_data" {
-    filename = "${path.module}/bin/cluster.json"
+    filename = "${abspath(path.module)}/bin/cluster.json"
     depends_on = [
     null_resource.tkgi_cluster_info
   ]
